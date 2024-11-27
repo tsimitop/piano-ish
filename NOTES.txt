@@ -1,0 +1,44 @@
+1. Web Audio API (Built-in)
+The Web Audio API is ideal for directly working with specific frequencies because
+it gives low-level control over sound generation and manipulation.
+
+This approach gives you full control over the waveform, frequency, and duration
+of the sound.
+
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+// Create an oscillator to generate a tone
+const oscillator = audioContext.createOscillator();
+
+// Set the frequency (in Hertz)
+oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
+
+// Choose waveform type
+oscillator.type = 'sine'; // Options: sine, square, sawtooth, triangle
+
+// Connect the oscillator to the audio output (speakers)
+oscillator.connect(audioContext.destination);
+
+// Start and stop the sound
+oscillator.start();
+oscillator.stop(audioContext.currentTime + 2); // Play for 2 seconds
+________________________________________________________________________________
+
+2. Tone.js
+If you prefer a library that simplifies working with sound and still allows you to
+specify frequencies directly, Tone.js is a great choice.
+// Include Tone.js in your project
+const synth = new Tone.Synth().toDestination();
+
+// Play a tone at 440 Hz for an eighth note
+Tone.start(); // Ensure the audio context is running
+synth.triggerAttackRelease(440, "8n"); // 440 Hz (A4), "8n" = eighth note
+
+Tone.js provides additional abstractions like scheduling and musical timing, making
+it more user-friendly for complex audio tasks.
+
+Feature						Web Audio API					Tone.js
+Control Over Frequency		Very precise, low-level			Precise, with high-level API
+Ease of Use					Requires more code				Simplified syntax
+Customization				Full control					Limited but easier to use
+Best For					Advanced, raw audio work		Music-focused applications
