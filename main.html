@@ -83,6 +83,8 @@ _____________________________________________(DEPENDS ON KEY ACTION OF 'A')
 
 
 <!DOCTYPE html> -->
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -97,50 +99,94 @@ _____________________________________________(DEPENDS ON KEY ACTION OF 'A')
         // Create an audio context
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-        let oscillator; // Store the oscillator so we can stop it later
-        let isPlaying = false; // Track whether the tone is playing
+        let oscillatorA; // Store the oscillatorA so we can stop it later
+        let oscillatorB; // Store the oscillatorB so we can stop it later
+        let isPlayingA = false; // Track whether the A tone is playing
+        let isPlayingB = false; // Track whether the B tone is playing
 
-        // Function to start the tone
-        function startTone() {
-            if (!isPlaying) {  // Ensure we don't create multiple oscillators at once
-                oscillator = audioContext.createOscillator();
+        // Function to start the tone for 'a'
+        function startToneA() {
+            if (!isPlayingA) {  // Ensure we don't create multiple oscillatorAs at once
+                oscillatorA = audioContext.createOscillator();
 
                 // Set the frequency (in Hertz)
-                oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
+                oscillatorA.frequency.setValueAtTime(440, audioContext.currentTime); // A4
 
                 // Choose waveform type
-                oscillator.type = 'sine'; // Options: sine, square, sawtooth, triangle
+                oscillatorA.type = 'sine'; // Options: sine, square, sawtooth, triangle
 
-                // Connect the oscillator to the audio output (speakers)
-                oscillator.connect(audioContext.destination);
+                // Connect the oscillatorA to the audio output (speakers)
+                oscillatorA.connect(audioContext.destination);
 
                 // Start the sound
-                oscillator.start();
-                isPlaying = true; // Mark that the sound is playing
+                oscillatorA.start();
+                isPlayingA = true; // Mark that the A sound is playing
             }
         }
 
-        // Function to stop the tone
-        function stopTone() {
-            if (isPlaying) {
-                oscillator.stop(audioContext.currentTime); // Stop the sound immediately
-                isPlaying = false; // Mark that the sound is stopped
+        // Function to start the tone for 'b'
+        function startToneB() {
+            if (!isPlayingB) {  // Ensure we don't create multiple oscillatorBs at once
+                oscillatorB = audioContext.createOscillator();
+
+                // Set the frequency (in Hertz)
+                oscillatorB.frequency.setValueAtTime(493.883, audioContext.currentTime); // B4
+
+                // Choose waveform type
+                oscillatorB.type = 'sine'; // Options: sine, square, sawtooth, triangle
+
+                // Connect the oscillatorB to the audio output (speakers)
+                oscillatorB.connect(audioContext.destination);
+
+                // Start the sound
+                oscillatorB.start();
+                isPlayingB = true; // Mark that the B sound is playing
+            }
+        }
+
+        // Function to stop the tone for 'a'
+        function stopToneA() {
+            if (isPlayingA) {
+                oscillatorA.stop(audioContext.currentTime); // Stop the sound immediately
+                isPlayingA = false; // Mark that the A sound is stopped
+            }
+        }
+
+        // Function to stop the tone for 'b'
+        function stopToneB() {
+            if (isPlayingB) {
+                oscillatorB.stop(audioContext.currentTime); // Stop the sound immediately
+                isPlayingB = false; // Mark that the B sound is stopped
             }
         }
 
         // Event listener to start the tone when 'a' is pressed
         document.addEventListener('keydown', function(event) {
             if (event.key === 'a' || event.key === 'A') {
-                startTone(); // Start the tone when 'a' is pressed
+                startToneA(); // Start the tone when 'a' is pressed
             }
         });
 
         // Event listener to stop the tone when 'a' is released
         document.addEventListener('keyup', function(event) {
             if (event.key === 'a' || event.key === 'A') {
-                stopTone(); // Stop the tone when 'a' is released
+                stopToneA(); // Stop the tone when 'a' is released
+            }
+        });
+
+        // Event listener to start the tone when 'b' is pressed
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'b' || event.key === 'B') {
+                startToneB(); // Start the tone when 'b' is pressed
+            }
+        });
+
+        // Event listener to stop the tone when 'b' is released
+        document.addEventListener('keyup', function(event) {
+            if (event.key === 'b' || event.key === 'B') {
+                stopToneB(); // Stop the tone when 'b' is released
             }
         });
     </script>
 </body>
-</html> -->
+</html>
