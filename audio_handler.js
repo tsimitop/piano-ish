@@ -13,7 +13,7 @@ class AudioHandler {
             oscillator.connect(gainNode);
             gainNode.connect(this.audioContext.destination);
             oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
-            oscillator.type = 'sine';
+            oscillator.type = 'triangle';
             // oscillator.connect(this.audioContext.destination);
             gainNode.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.12);
             oscillator.start();
@@ -37,24 +37,6 @@ class AudioHandler {
         }
     }
 
-// stopTone(key) {
-//     if (this.oscillators[key]) {
-//         const { oscillator, gainNode } = this.oscillators[key];
-//         const currentTime = this.audioContext.currentTime;
-        
-//         // Ensure a smooth transition by using the current gain value
-//         const currentGain = gainNode.gain.value;
-
-//         // Start ramping from the current value to avoid abrupt jumps
-//         gainNode.gain.cancelScheduledValues(currentTime); // Clear any scheduled ramps
-//         gainNode.gain.setValueAtTime(currentGain, currentTime);
-//         gainNode.gain.linearRampToValueAtTime(0.01, currentTime + 0.4); // Smooth ramp down
-
-//         // Stop the oscillator after the ramp-down completes
-//         oscillator.stop(currentTime + 0.4);
-//         delete this.oscillators[key];
-//     }
-// }
 }
 // const { oscillator, gainNode } = this.oscillators[key];
 // const currentTime = this.audioContext.currentTime;
