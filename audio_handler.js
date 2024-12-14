@@ -2,27 +2,68 @@ class AudioHandler {
     constructor(audioContext) {
         this.audioContext = audioContext;
         this.oscillators = {};
+        // this.gainNode = audioContext.createGain();
     }
 
     startTone(key, frequency) {
         if (!this.oscillators[key]) {
             const oscillator = this.audioContext.createOscillator();
+            const gainNode = this.audioContext.createGain();
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            oscillator.connect(gainNode);
+            gainNode.connect(this.audioContext.destination);
             oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
             oscillator.type = 'sine';
-            oscillator.connect(this.audioContext.destination);
+            // oscillator.connect(this.audioContext.destination);
+            gainNode.gain.linearRampToValueAtTime(1, this.audioContext.currentTime + 0.12);
             oscillator.start();
 
-            this.oscillators[key] = oscillator;
+            this.oscillators[key] = {oscillator, gainNode};
         }
     }
 
     stopTone(key) {
         if (this.oscillators[key]) {
-            this.oscillators[key].stop(this.audioContext.currentTime);
+            const { oscillator, gainNode } = this.oscillators[key];
+            // gainNode.gain.exponentialRampToValueAtTime(0.0009, this.audioContext.currentTime + 0.1);
+            gainNode.gain.cancelScheduledValues(this.audioContext.currentTime);
+            gainNode.gain.setValueAtTime(gainNode.gain.value, this.audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.01, this.audioContext.currentTime + 0.2);
+            oscillator.stop(this.audioContext.currentTime + 0.2);
+            void oscillator;
             delete this.oscillators[key];
+
+
         }
     }
+
+// stopTone(key) {
+//     if (this.oscillators[key]) {
+//         const { oscillator, gainNode } = this.oscillators[key];
+//         const currentTime = this.audioContext.currentTime;
+        
+//         // Ensure a smooth transition by using the current gain value
+//         const currentGain = gainNode.gain.value;
+
+//         // Start ramping from the current value to avoid abrupt jumps
+//         gainNode.gain.cancelScheduledValues(currentTime); // Clear any scheduled ramps
+//         gainNode.gain.setValueAtTime(currentGain, currentTime);
+//         gainNode.gain.linearRampToValueAtTime(0.01, currentTime + 0.4); // Smooth ramp down
+
+//         // Stop the oscillator after the ramp-down completes
+//         oscillator.stop(currentTime + 0.4);
+//         delete this.oscillators[key];
+//     }
+// }
 }
+// const { oscillator, gainNode } = this.oscillators[key];
+// const currentTime = this.audioContext.currentTime;
+// const rampDuration = 0.1;
+// gainNode.gain.linearRampToValueAtTime(0, currentTime + (rampDuration));
+// setTimeout(() => {
+//     oscillator.stop();
+//     delete this.oscillators[key];
+// }, rampDuration * 1000);
 
 // Initializing audio context and handler
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -59,17 +100,17 @@ const keyFrequencies = {
 // '[': 493.8833,	// B4
 // ']': 523.2511	// C5 high
 // ----------------------------------
-z: 261.63,	// C4 lower C
-s: 277.18,	// C#4/Db4
-x: 293.66,	// D4
-d: 311.13,	// D#4/Eb4
-c: 329.63,	// E4
-v: 349.23,	// F5
-g: 369.99,	// F#4/Gb4
-b: 392.00,	// G4
-h: 415.30,	// G#4/Ab4
-n: 440.00,	// A4
-j: 466.16,	// A4#/Bb4
+z: 261.6255,	// C4 lower C
+s: 277.1826,	// C#4/Db4
+x: 293.6647,	// D4
+d: 311.1269,	// D#4/Eb4
+c: 329.6275,	// E4
+v: 349.2282,	// F5
+g: 369.9944,	// F#4/Gb4
+b: 391.9954,	// G4
+h: 415.3046,	// G#4/Ab4
+n: 440.0000,	// A4
+j: 466.1637,	// A4#/Bb4
 m: 493.8833,	// B4
 ',': 523.2511,	// C4 middle C
 // ----------------------------------
@@ -139,10 +180,6 @@ p: 880.0000,	// A5
 	// ']': 523.25	// C5 high
 };
 
-// t = do psilo-deksi heri
-// z = do hamilo-aristero heri
-// , = ] = mesaio do
-// Event listeners
 document.addEventListener('keydown', (event) => {
     const key = event.key.toLowerCase();
     if (keyFrequencies[key]) {
