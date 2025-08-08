@@ -13,6 +13,7 @@ Have fun making music! 🎶
 
 - [Node.js](https://nodejs.org/) (v16 or later recommended)  
 - [npm](https://www.npmjs.com/) (comes with Node.js)
+- Best to have english on your keyboard, otherwise the notes might not be very conveniently positioned.
 
 ### Installation & Running
 
