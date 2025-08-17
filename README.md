@@ -21,7 +21,7 @@ Have fun making music! 🎶
 2. Open your terminal and run:
 
 ```bash
-cd <your-cloned-directory>
+cd <your-cloned-directory> && cd keyboard-audio
 npm install
 npx vite --host --port 5173
 ```
